@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Nouveau client
+
+    form.ui.form(action="/clients/nouveau" method="post")
+      .ui.field
+        label Nom
+        input(name="nom" placeholder="Nom" type="text")
+      .ui.field
+        label Prénom
+        input(name="prenom" placeholder="Prénom" type="text")
+      .ui.field
+        label Surnom
+        input(name="surnom" placeholder="Surnom (optionnel)" type="text")
+      .ui.field
+        label Promotion
+        input(name="promotion" placeholder="Promotion" type="text")
+      .ui.field
+        .ui.checkbox
+          input(name="membre" type="checkbox")
+          label Membre du Toucan
+      .ui.field
+        input.ui.button(type="submit" value="Créer")
+      

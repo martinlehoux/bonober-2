@@ -1,0 +1,35 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Nouveau produit
+
+    form.ui.form(action="/produits/nouveau" method="post" enctype="multipart/form-data")
+      .ui.field
+        label Nom
+        input(name="nom" placeholder="Nom" type="text")
+      .ui.field
+        label Stocks
+        input(name="stocks" placeholder="Quantité en stocks" type="number")
+      .ui.field
+        label Prix unitaire
+        input(name="prixUnitaire" placeholder="Prix unitaire" type="number" step="0.1")
+      .ui.inline.fields
+        label Catégorie :
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="boisson")
+            label Boisson
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="nourriture")
+            label Nourriture
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="autre")
+            label Autre
+      .ui.field
+        label Image
+        input(type="file" name="image")
+      .ui.field
+        input.ui.button(type="submit" value="Créer")

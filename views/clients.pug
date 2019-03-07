@@ -1,0 +1,13 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Clients
+    a.ui.button(href="/clients/nouveau") Créer un nouveau client
+
+    table.ui.table
+      tbody
+        each client in clients
+          tr
+            td #{client.prenom} #{client.nom}
+              .ui.label.float #{client.solde} €
