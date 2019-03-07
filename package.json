@@ -4,11 +4,21 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Kagamino",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "body-parser": "^1.18.3",
+    "connect-mongodb-session": "^2.1.1",
+    "eslint": "^5.15.1",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.2-alpha.1",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.4.17",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.10",
+    "pug": "^2.0.3"
   }
 }
