@@ -7,17 +7,21 @@ html(lang="en")
     title Bonober
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous")
   body
-    script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous")
+    script(src="/static/script.js")
 
     block navbar
       .ui.pointing.menu
-        a.item(href="/") Bonober
+        .item.header Bonober
         a.item(href="/clients") Clients
         a.item(href="/produits") Produits
-        a.item(href="/courses") Courses
-        a.item(href="/statistiques") Statistiques
+        //- a.item(href="/courses") Courses
+        //- a.item(href="/statistiques") Statistiques
         .right.menu
-          a.item(href="/connexion") Connexion
+          if !loggedIn
+            a.item(href="/") Connexion
+          else
+            a.item(href="/deconnexion") Déconnexion
       
     block content

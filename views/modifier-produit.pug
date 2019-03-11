@@ -1,0 +1,38 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Modifier #{produit.nom}
+
+    form.ui.form(action="/produits/"+produit._id+"/modifier" method="post" enctype="multipart/form-data")
+      .ui.field
+        label Nom
+        input(name="nom" placeholder="Nom" type="text" value=produit.nom)
+      .ui.field
+        label Stock
+        input(name="stock" placeholder="Quantité en stock" type="number" value=produit.stock)
+      .ui.field
+        label Prix unitaire
+        input(name="prixUnitaire" placeholder="Prix unitaire" type="number" step="0.1" value=produit.prixUnitaire)
+      .ui.inline.fields
+        label Catégorie :
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="boisson" checked=(produit.categorie == "boisson"))
+            label Boisson
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="nourriture" checked=(produit.categorie == "nourriture"))
+            label Nourriture
+        .field
+          .ui.checkbox.radio
+            input(type="radio" name="categorie" value="autre" checked=(produit.categorie == "autre"))
+            label Autre
+      .ui.fields
+        .field.two.wide
+          img.ui.tiny.image(src="/images/"+produit.image)
+        .field.fourteen.wide
+          label Image
+          input(type="file" name="image")
+      .ui.field
+        input.ui.button(type="submit" value="Modifier")

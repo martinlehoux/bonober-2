@@ -1,0 +1,42 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Nouvelles courses
+
+    form.ui.form(action="/courses/nouvelle" method="post")
+      .ui.field
+        label Conducteur
+        select.ui.fluid.search.dropdown(name="conducteur")
+          each membre in membres
+            option(value=membre._id) #{membre.prenom} #{membre.nom}
+      
+      table.ui.table
+        thead
+          tr
+            th Produit
+            th Quantité
+            th Prix total
+            th
+        tbody#produits
+          tr
+            td
+              select.ui.fluid.search.dropdown#produit(name="nouveau_produit")
+                each produit in produits
+                  option(value=produit._id) #{produit.nom}
+            td
+              input#quantite(type="number" name="quantite" placeholder="Quantité")
+            td
+              input#prix(type="number" step="0.01" name="prix" placeholder="Prix")
+            td
+              button.ui.icon.button(onclick="ajoutProduit()" type="button")
+                i.add.icon
+        
+      .ui.field
+        label Prix des fournitures
+        input(type="number" step="0.01" name="prixFournitures" placeholder="Fournitures")
+      .ui.field
+        input#total(type="hidden" value="0" name="total")
+        input.ui.button(type="submit" value="Enregistrer")
+
+  script $('select').dropdown();

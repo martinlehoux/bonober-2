@@ -1,1 +1,13 @@
 extends layout.pug
+
+block content
+  .ui.container
+    .ui.grid.one.column.centered
+      .column.four.wide
+        if !loggedIn
+          form.ui.form(action="/connexion", method="post")
+            .field
+              label Mot de passe
+              input(type="password" name="password" placeholder="test")
+        else
+          h3.ui.header Connecté

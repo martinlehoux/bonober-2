@@ -9,6 +9,7 @@ const config = require("./config.json");
 
 const Client = require("./models/client");
 const Produit = require("./models/produit");
+// const Course = require("./models/course");
 
 const app = express();
 const store = new mongoDBStore({
@@ -23,36 +24,145 @@ app.use(session({
   saveUninitialized: false,
   store
 }));
+app.use("/images", express.static('images'));
+app.use("/static", express.static("static"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
 
 // Login checker
 
-app.get("/", (req, res) => res.render("index"));
-app.get("/clients", (req, res) => {
-  Client.find({}, (err, clients) => res.render("clients", { clients }));
+app.get("/", (req, res) => res.render("index", { loggedIn: Boolean(req.session.loggedIn) }));
+app.post("/connexion", (req, res) => {
+  if (!req.body.password || req.body.password!==config.password) res.send("bad password");
+  else {
+    req.session.loggedIn = true;
+    res.redirect("/");
+  }
 });
-app.get("/clients/nouveau", (req, res) => res.render("nouveau-client"));
-app.post("/clients/nouveau", (req, res) => {
+app.get("/deconnexion", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
+});
+app.use((req, res, next) => {
+  if (req.session.loggedIn) next();
+  else res.redirect("/");
+});
+app.get("/clients", (req, res) => {
+  Client.find({}, (err, clients) => res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) }));
+});
+app.get("/clients/nouveau", (req, res) => res.render("nouveau-client", { loggedIn: Boolean(req.session.loggedIn) }));
+app.post("/clients", (req, res) => {
+  if (req.body.membre) req.body.membre = true;
   Client
     .create(req.body)
     .then(() => res.redirect("/clients"))
-    .catch(err => console.error(err));
+    .catch(err => res.send(err));
+});
+app.get("/clients/:id", (req, res) => {
+  Promise
+    .all([
+      Client.findById(req.params.id).populate("commandes.produit").exec(),
+      Produit.find().exec(),
+    ])
+    .then(([client, produits]) => res.render("client", { client, produits, loggedIn: Boolean(req.session.loggedIn) }));
+});
+app.post("/clients/:id/operations", (req, res) => {
+  Client
+    .findOneAndUpdate({ _id: req.params.id }, { $push: { operations: { montant: req.body.montant } }, $inc: { solde: req.body.montant } }, (err, client) => console.log(err));
+  res.redirect("/clients/"+req.params.id);
+});
+app.get("/clients/:idClient/achat/:idProduit", (req, res) => {
+  Produit
+    .findById(req.params.idProduit).exec()
+    .then(produit => {
+      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec();
+      res.redirect("/clients/"+req.params.idClient);
+    })
+    .catch(err => res.send(err));
 });
 app.get("/produits", (req, res) => {
-  Produit.find({}, (err, produits) => res.render("produits", { produits }));
+  Promise
+    .all([
+      Produit.find({ categorie: "boisson" }).exec(),
+      Produit.find({ categorie: "nourriture" }).exec(),
+      Produit.find({ categorie: "autre" }).exec()
+    ])
+    .then(([boissons, nourritures, autres]) => res.render("produits", { boissons, nourritures, autres, loggedIn: Boolean(req.session.loggedIn) }));
 });
-app.get("/produits/nouveau", (req, res) => res.render("nouveau-produit"));
-app.post("/produits/nouveau", (req, res) => {
+app.get("/produits/nouveau", (req, res) => res.render("nouveau-produit", { loggedIn: Boolean(req.session.loggedIn) }));
+app.post("/produits", (req, res) => {
   const image = req.files.image;
   if (image) {
     image.mv("images/"+image.name);
   }
   Produit
-    .create({ ...req.body, image })
+    .create({ ...req.body, image: image && image.name })
     .then(() => res.redirect("/produits"))
-    .catch(err => console.error(err));
+    .catch(err => res.send(err));
 });
+app.get("/produits/:id", (req, res) => {
+  Produit
+    .findById(req.params.id).exec()
+    .then(produit => res.render("produit", { produit, loggedIn: Boolean(req.session.loggedIn) }));
+});
+app.get("/produits/:id/modifier", (req, res) => {
+  Produit
+    .findById(req.params.id).exec()
+    .then(produit => res.render("modifier-produit", { produit, loggedIn: Boolean(req.session.loggedIn) }));
+});
+app.post("/produits/:id/modifier", (req, res) => {
+  const image = req.files.image;
+  if (image) {
+    image.mv("images/"+image.name);
+    Produit.findOneAndUpdate({ _id: req.params.id }, { image: image.name }).exec();
+  }
+  Produit.findOneAndUpdate({ _id: req.params.id }, { ...req.body }).exec();
+  res.redirect("/produits");
+});
+app.post("/produits/:id/supprimer", (req, res) => {
+  Produit.findOneAndDelete({ _id: req.params.id }).exec()
+  res.redirect("/produits");
+});
+// app.get("/courses", (req, res) => {
+//   Course
+//     .find().populate("conducteur").exec()
+//     .then(courses => res.render("courses", { courses }));
+// });
+// app.get("/courses/nouvelle", (req, res) => {
+//   Promise
+//     .all([
+//       Client.find({ membre: true }).exec(),
+//       Produit.find({}).exec()
+//     ])
+//     .then(([membres, produits]) => res.render("nouvelle-course", { membres, produits }));
+// });
+// app.post("/courses/nouvelle", (req, res) => {
+//   const produits = [];
+//   for (i = 0; i < parseInt(req.body.total); i++) {
+//     produits.push({
+//       produit: req.body[`produit[${i}]`],
+//       quantite: req.body[`quantite[${i}]`],
+//       prix: parseInt(req.body[`prix[${i}]`])
+//     });
+//   }
+//   const prix = parseInt(req.body.prixFournitures) + produits.reduce((total, now) => total + now.prix, 0);
+//   Course
+//     .create({
+//       conducteur: req.body.conducteur,
+//       produits,
+//       prixFournitures: req.body.prixFournitures,
+//       prix
+//     })
+//     .then(() => res.redirect("/courses"))
+//     .catch(err => res.send(err));
+// });
+// app.get("/courses/:id", (req, res) => {
+//   Course
+//     .findOne({ _id: req.params.id }).exec()
+//     .then(course => {
+//       res.render("course", { course });
+//     }); //
+// });
 
 mongoose.connect('mongodb://localhost/bonober', err => {
   if (err) {

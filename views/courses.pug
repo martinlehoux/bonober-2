@@ -1,0 +1,15 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Courses
+    a.ui.button(href="/courses/nouvelle") Créer de nouvelles courses
+
+    table.ui.table
+      tbody
+        each course in courses
+          tr
+            td.selectable
+              a(href="/courses/"+course._id) Courses du #{course.date.toLocaleDateString()} par #{course.conducteur.prenom} #{course.conducteur.nom}
+            td.right.align.collapsing
+              .ui.label #{course.prix} €

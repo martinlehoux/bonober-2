@@ -4,13 +4,13 @@ block content
   .ui.container
     h1.ui.header Nouveau client
 
-    form.ui.form(action="/clients/nouveau" method="post")
-      .ui.field
-        label Nom
-        input(name="nom" placeholder="Nom" type="text")
+    form.ui.form(action="/clients" method="post")
       .ui.field
         label Prénom
         input(name="prenom" placeholder="Prénom" type="text")
+      .ui.field
+        label Nom
+        input(name="nom" placeholder="Nom" type="text")
       .ui.field
         label Surnom
         input(name="surnom" placeholder="Surnom (optionnel)" type="text")

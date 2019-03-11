@@ -1,0 +1,75 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header #{client.prenom} #{client.nom}
+
+    .ui.grid
+      .six.wide.column
+        .ui.statistics
+          .statistic
+            .value #{client.solde.toFixed(2)} €
+            .label Solde
+        form(action="/clients/"+client._id+"/supprimer" method="post" onsubmit="return confirm('Supprimer "+client.prenom+" "+client.nom+" ?');")
+          a.ui.button.icon(href="/clients/"+client._id+"/modifier")
+            i.edit.icon
+          button.ui.button.icon(type="submit")
+            i.trash.icon
+          button.ui.button(type="button" onclick="$('#commande').modal('show')") Commande
+
+          button.ui.button(type="button" onclick="$('#recharge').modal('show')") Recharge
+
+        .ui.modal#commande
+          .header #{client.prenom} #{client.nom}
+          .content.scrollable
+            form.ui.form#commande-form(action="/clients/"+client._id+"/commandes" method="post")
+              table.ui.table
+                tbody#produits
+            
+            .ui.tiny.images
+              each produit in produits
+                a.ui.tiny.image(href="/clients/"+client._id+"/achat/"+produit._id)
+                  img(src="/images/"+produit.image)
+
+        .ui.modal#recharge
+          .header #{client.prenom} #{client.nom}
+          .content
+            form.ui.form#recharge-form(action="/clients/"+client._id+"/operations" method="post")
+              .field
+                label Montant de l'opération
+                input(type="number" step="0.01" placeholder="Montant" name="montant")
+          .actions
+            button.ui.button(type="button" onclick="$('#recharge').modal('hide')") Annuler
+            button.ui.button(type="submit" form="recharge-form") Valider
+
+      .ten.wide.column
+        h3.ui.header Dernières opérations
+          table.ui.table
+            thead
+              tr
+                th Date
+                th Montant
+                th Motif
+            tbody
+              each operation in client.operations.slice(-5).reverse()
+                tr
+                  td= operation.date.toLocaleDateString()
+                  td #{operation.montant.toFixed(2)} €
+                  td= operation.motif
+
+        //- p= client.commandes
+        h3.ui.header Dernières commandes
+          table.ui.table
+            thead
+              tr
+                th Date
+                th Produit
+                th Prix
+            tbody
+              each commande in client.commandes.slice(-5).reverse()
+                tr
+                  td= commande.date.toLocaleDateString()
+                  td #{commande.produit.nom}
+                  td #{commande.produit.prixUnitaire.toFixed(2)} €
+  
+  script $(".ui.modal").modal();

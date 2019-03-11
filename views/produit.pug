@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header 
+      | #{produit.nom}
+      span.ui.label= produit.categorie
+    
+    .ui.grid
+      .four.wide.column
+        img.ui.image.bordered.rounded(src="/images/"+produit.image)
+      .twelve.wide.column
+        .ui.statistics
+          .statistic
+            .value= produit.stock
+            .label En stock
+          .statistic
+            .value #{produit.prixUnitaire} €
+            .label L'unité
+
+        .ui.container.center.aligned
+          form(action="/produits/"+produit._id+"/supprimer" method="post" onsubmit="return confirm('Supprimer "+produit.nom+" ?');")
+            a.ui.button.icon(href="/produits/"+produit._id+"/modifier")
+              i.edit.icon
+            button.ui.button.icon(type="submit")
+              i.trash.icon

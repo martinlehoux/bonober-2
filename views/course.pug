@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+  .ui.container
+    h1.ui.header Courses du #{course.date.toLocaleDateString()}
+
+    table.ui.table
+      thead
+        tr
+          th Produit
+          th Quantité
+          th Prix total
+      tbody
+        each produit in course.produits
+          tr
+            td= produit.id
+              //- img(src="/images/"+produit.image)
+              //- | #{produit.nom}
+            td= produit.quantite
+            td #{produit.prix} €
+        tr
+          td Fournitures
+          td
+          td #{course.prixFournitures} €
+    
+

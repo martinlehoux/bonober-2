@@ -9,5 +9,11 @@ block content
       tbody
         each client in clients
           tr
-            td #{client.prenom} #{client.nom}
-              .ui.label.float #{client.solde} €
+            td.selectable
+              a(href="/clients/"+client._id).class  #{client.prenom} #{client.nom}
+            td.right.align.collapsing
+              .ui.label #{client.solde.toFixed(2)} €
+              if client.membre
+                .ui.label
+                  i.certificate.icon
+                  | Toucan™

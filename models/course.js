@@ -7,7 +7,9 @@ const Course = new mongoose.Schema({
     quantite: { type: Number, required: true },
     prix: { type: Number, required: true }
   }],
-  prixFournitures: { type: Number, default: 0 }
+  prixFournitures: { type: Number, default: 0 },
+  date: { type: Date, default: Date.now },
+  prix: { type: Number, required: true }
 });
 
 module.exports = mongoose.model("Course", Course);

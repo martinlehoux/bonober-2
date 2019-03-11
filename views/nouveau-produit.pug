@@ -4,13 +4,13 @@ block content
   .ui.container
     h1.ui.header Nouveau produit
 
-    form.ui.form(action="/produits/nouveau" method="post" enctype="multipart/form-data")
+    form.ui.form(action="/produits" method="post" enctype="multipart/form-data")
       .ui.field
         label Nom
         input(name="nom" placeholder="Nom" type="text")
       .ui.field
-        label Stocks
-        input(name="stocks" placeholder="Quantité en stocks" type="number")
+        label Stock
+        input(name="stock" placeholder="Quantité en stock" type="number")
       .ui.field
         label Prix unitaire
         input(name="prixUnitaire" placeholder="Prix unitaire" type="number" step="0.1")

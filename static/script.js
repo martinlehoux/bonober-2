@@ -1,0 +1,36 @@
+function ajoutProduit() {
+  if (typeof window.counter == 'undefined') window.counter = 0;
+  console.log(window.counter);
+  const produit = document.getElementById("produit").value;
+  const quantite = document.getElementById("quantite").value;
+  const prix = document.getElementById("prix").value;
+  console.log(produit, quantite, prix);
+  const row = document.createElement("tr");
+  const inputProduit = document.createElement("input");
+  inputProduit.setAttribute("type", "hidden");
+  inputProduit.name = `produit[${window.counter}]`;
+  inputProduit.value = produit;
+  const produitTD = document.createElement("td");
+  produitTD.innerText = document.getElementById("produit").options[document.getElementById("produit").selectedIndex].text;
+  const inputQuantite = document.createElement("input");
+  inputQuantite.setAttribute("type", "hidden");
+  inputQuantite.name = `quantite[${window.counter}]`;
+  inputQuantite.value = quantite;
+  const quantiteTD = document.createElement("td");
+  quantiteTD.innerText = quantite;
+  const inputPrix = document.createElement("input");
+  inputPrix.setAttribute("type", "hidden");
+  inputPrix.name = `prix[${window.counter}]`;
+  inputPrix.value = prix;
+  const prixTD = document.createElement("td");
+  prixTD.innerText = prix;
+  row.appendChild(inputProduit);
+  row.appendChild(produitTD);
+  row.appendChild(inputQuantite);
+  row.appendChild(quantiteTD);
+  row.appendChild(inputPrix);
+  row.appendChild(prixTD);
+  document.getElementById("produits").appendChild(row);
+  window.counter ++;
+  document.getElementById("total").value = window.counter;
+}
