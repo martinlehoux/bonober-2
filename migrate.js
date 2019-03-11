@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Client = require("./models/client");
-const Produit = require("./models/clients");
+const Produit = require("./models/produit");
 
 mongoose.connect('mongodb://localhost/bonober', err => {
   if (err) console.error(err);
@@ -18,6 +18,7 @@ mongoose.connect('mongodb://localhost/bonober', err => {
               membre: customer.isNegativeAllowed,
               solde: customer.balance
             });
+            console.log(customer.displayName, "migrated");
           });
         });
         db.collection('products').find({}).toArray((err, products) => {
@@ -27,6 +28,7 @@ mongoose.connect('mongodb://localhost/bonober', err => {
               prixUnitaire: product.unitPrice,
               categorie: product.category
             });
+            console.log(product.name, "migrated");
           });
         });
       }
