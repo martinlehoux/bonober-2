@@ -22,13 +22,9 @@ block content
         .ui.modal#commande
           .header #{client.prenom} #{client.nom}
           .content.scrollable
-            form.ui.form#commande-form(action="/clients/"+client._id+"/commandes" method="post")
-              table.ui.table
-                tbody#produits
-            
             .ui.tiny.images
               each produit in produits
-                a.ui.tiny.image(href="/clients/"+client._id+"/achat/"+produit._id)
+                a.ui.tiny.image.perso-popup(href="/clients/"+client._id+"/achat/"+produit._id data-content=produit.nom+" ("+produit.prixUnitaire+" €)")
                   img(src="/images/"+produit.image)
 
         .ui.modal#recharge
@@ -73,3 +69,4 @@ block content
                 td #{commande.produit.prixUnitaire.toFixed(2)} €
   
   script $(".ui.modal").modal();
+  script $('.perso-popup').popup();

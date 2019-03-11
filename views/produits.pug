@@ -11,7 +11,7 @@ block content
         a.card(href="/produits/"+produit._id)
           .content
             .header= produit.nom
-              .ui.label.floating #{produit.prixUnitaire}€
+              .ui.label #{produit.prixUnitaire.toFixed(2)}€
           .ui.tiny.image.centered
             img(src="/images/"+produit.image alt="")
           .content
@@ -23,7 +23,7 @@ block content
         a.card(href="/produits/"+produit._id)
           .content
             .header= produit.nom
-              .ui.label.floating #{produit.prixUnitaire}€
+              .ui.label #{produit.prixUnitaire.toFixed(2)}€
           .ui.tiny.image.centered
             img(src="/images/"+produit.image alt="")
           .content
@@ -35,7 +35,7 @@ block content
           a.card(href="/produits/"+produit._id)
             .content
               .header= produit.nom
-                .ui.label.floating #{produit.prixUnitaire}€
+                .ui.label #{produit.prixUnitaire.toFixed(2)}€
             .ui.tiny.image.centered
               img(src="/images/"+produit.image alt="")
             .content
