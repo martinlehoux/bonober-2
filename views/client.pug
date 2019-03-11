@@ -44,32 +44,32 @@ block content
 
       .ten.wide.column
         h3.ui.header Dernières opérations
-          table.ui.table
-            thead
+        table.ui.table.compact
+          thead
+            tr
+              th Date
+              th Montant
+              th Motif
+          tbody
+            each operation in client.operations.slice(-5).reverse()
               tr
-                th Date
-                th Montant
-                th Motif
-            tbody
-              each operation in client.operations.slice(-5).reverse()
-                tr
-                  td= operation.date.toLocaleDateString()
-                  td #{operation.montant.toFixed(2)} €
-                  td= operation.motif
+                td= operation.date.toLocaleDateString()
+                td #{operation.montant.toFixed(2)} €
+                td= operation.motif
 
         //- p= client.commandes
         h3.ui.header Dernières commandes
-          table.ui.table
-            thead
+        table.ui.table.compact
+          thead
+            tr
+              th Date
+              th Produit
+              th Prix
+          tbody
+            each commande in client.commandes.slice(-5).reverse()
               tr
-                th Date
-                th Produit
-                th Prix
-            tbody
-              each commande in client.commandes.slice(-5).reverse()
-                tr
-                  td= commande.date.toLocaleDateString()
-                  td #{commande.produit.nom}
-                  td #{commande.produit.prixUnitaire.toFixed(2)} €
+                td= commande.date.toLocaleDateString()
+                td #{commande.produit.nom}
+                td #{commande.produit.prixUnitaire.toFixed(2)} €
   
   script $(".ui.modal").modal();

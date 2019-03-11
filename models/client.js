@@ -13,4 +13,6 @@ const Client = new mongoose.Schema({
   commandes: [Commande]
 });
 
+Client.index({ "$**": 'text' });
+
 module.exports = mongoose.model('Client', Client);

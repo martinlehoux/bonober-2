@@ -48,7 +48,10 @@ app.use((req, res, next) => {
   else res.redirect("/");
 });
 app.get("/clients", (req, res) => {
-  Client.find({}, (err, clients) => res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) }));
+  const q = Client.find();
+  if (req.query.membre) q.find({ membre: true });
+  else if (req.query.search) q.find({ $text: { $search: req.query.search } });
+  q.exec().then(clients => res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) }));
 });
 app.get("/clients/nouveau", (req, res) => res.render("nouveau-client", { loggedIn: Boolean(req.session.loggedIn) }));
 app.post("/clients", (req, res) => {
@@ -66,6 +69,21 @@ app.get("/clients/:id", (req, res) => {
     ])
     .then(([client, produits]) => res.render("client", { client, produits, loggedIn: Boolean(req.session.loggedIn) }));
 });
+app.get("/clients/:id/modifier", (req, res) => {
+  Client
+    .findById(req.params.id).exec()
+    .then(client => res.render("modifier-client", { client }));
+});
+app.post("/clients/:id/modifier", (req, res) => {
+  if (req.body.membre) req.body.membre = true;
+  else req.body.membre = undefined;
+  Client.findOneAndUpdate({ _id: req.params.id }, { ...req.body }).exec();
+  res.redirect("/clients/"+req.params.id);
+});
+app.post("/clients/:id/supprimer", (req, res) => {
+  Client.findOneAndDelete({ _id: req.params.id }).exec()
+  res.redirect("/clients");
+})
 app.post("/clients/:id/operations", (req, res) => {
   Client
     .findOneAndUpdate({ _id: req.params.id }, { $push: { operations: { montant: req.body.montant } }, $inc: { solde: req.body.montant } }, (err, client) => console.log(err));
@@ -117,7 +135,7 @@ app.post("/produits/:id/modifier", (req, res) => {
     Produit.findOneAndUpdate({ _id: req.params.id }, { image: image.name }).exec();
   }
   Produit.findOneAndUpdate({ _id: req.params.id }, { ...req.body }).exec();
-  res.redirect("/produits");
+  res.redirect("/produits/"+req.params.id);
 });
 app.post("/produits/:id/supprimer", (req, res) => {
   Produit.findOneAndDelete({ _id: req.params.id }).exec()

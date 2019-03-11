@@ -3,7 +3,18 @@ extends layout.pug
 block content
   .ui.container
     h1.ui.header Clients
-    a.ui.button(href="/clients/nouveau") Créer un nouveau client
+    p
+      a.ui.button(href="/clients/nouveau") Créer un nouveau client
+
+    form.ui.form(action="/clients" method="get")
+      .fields
+        .twelve.wide.field
+          input(type="text" name="search" placeholder="Recherche")
+        .two.wide.field
+          input.ui.button(type="submit" value="Chercher")
+        .two.wide.field
+          a.ui.button.yellow(href="/clients?membre=true") Toucan™
+
 
     table.ui.table
       tbody
@@ -12,8 +23,8 @@ block content
             td.selectable
               a(href="/clients/"+client._id).class  #{client.prenom} #{client.nom}
             td.right.align.collapsing
-              .ui.label #{client.solde.toFixed(2)} €
+              .ui.label(class=client.solde<0 ? "red" : "green") #{client.solde.toFixed(2)} €
               if client.membre
-                .ui.label
+                .ui.label.yellow
                   i.certificate.icon
                   | Toucan™
