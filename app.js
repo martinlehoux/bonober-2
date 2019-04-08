@@ -90,7 +90,12 @@ app.get("/clients/:id", (req, res) => {
       Client.findById(req.params.id).populate("commandes.produit").exec(),
       Produit.find().exec(),
     ])
-    .then(([client, produits]) => res.render("client", { client, nourriture: produits.filter(produit => produit.categorie == "nourriture"), boissons: produits.filter(produit => produit.categorie == "boisson"), produits, loggedIn: Boolean(req.session.loggedIn) }));
+    .then(([client, produits]) => res.render("client", {
+      client,
+      nourriture: produits.filter(produit => produit.categorie == "nourriture").sort((a, b) => a.nom < b.nom),
+      boissons: produits.filter(produit => produit.categorie == "boisson").sort((a, b) => a.nom < b.nom),
+      produits, loggedIn: Boolean(req.session.loggedIn)
+    }));
 });
 app.get("/clients/:id/modifier", (req, res) => {
   Client
