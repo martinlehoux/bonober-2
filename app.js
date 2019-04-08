@@ -11,6 +11,20 @@ const Client = require("./models/client");
 const Produit = require("./models/produit");
 // const Course = require("./models/course");
 
+function search(word, users) {
+    word = word.toLowerCase();
+    const result = [];
+    users.forEach(user => {
+        if (
+            user.nom.toLowerCase().includes(word) ||
+            user.prenom.toLowerCase().includes(word) ||
+            user.surnom.toLowerCase().includes(word)
+        ) result.push(user);
+        else if (word.split(" ").every(part => user.nom.toLowerCase().includes(part) || user.prenom.toLowerCase().includes(part) || user.surnom.toLowerCase().includes(part))) result.push(user);
+    });
+    return result;
+}
+
 const app = express();
 const store = new mongoDBStore({
   uri: "mongodb://localhost/bonober",
@@ -48,10 +62,13 @@ app.use((req, res, next) => {
   else res.redirect("/");
 });
 app.get("/clients", (req, res) => {
-  const q = Client.find();
-  if (req.query.membre) q.find({ membre: true });
-  else if (req.query.search) q.find({ $text: { $search: req.query.search } });
-  q.exec().then(clients => res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) }));
+  Client
+    .find()
+    .exec()
+    .then(clients => {
+      if (req.query.search) clients = search(req.query.search, clients);
+      res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) })
+    })
 });
 app.get("/clients/nouveau", (req, res) => res.render("nouveau-client", { loggedIn: Boolean(req.session.loggedIn) }));
 app.post("/clients", (req, res) => {
