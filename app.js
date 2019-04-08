@@ -92,8 +92,8 @@ app.get("/clients/:id", (req, res) => {
     ])
     .then(([client, produits]) => res.render("client", {
       client,
-      nourriture: produits.filter(produit => produit.categorie == "nourriture").sort((a, b) => a.nom < b.nom),
-      boissons: produits.filter(produit => produit.categorie == "boisson").sort((a, b) => a.nom < b.nom),
+      nourriture: produits.filter(produit => produit.categorie == "nourriture"),
+      boissons: produits.filter(produit => produit.categorie == "boisson"),
       produits, loggedIn: Boolean(req.session.loggedIn)
     }));
 });
