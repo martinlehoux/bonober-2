@@ -12,23 +12,23 @@ const Produit = require("./models/produit");
 // const Course = require("./models/course");
 
 function search(word, users) {
-    word = word.toLowerCase();
-    const result = [];
-    users.forEach(user => {
-      if (
-        (user.nom && user.nom.toLowerCase().includes(word)) ||
-        (user.prenom && user.prenom.toLowerCase().includes(word)) ||
-        (user.surnom && user.surnom.toLowerCase().includes(word))
-      ) result.push(user);
-      else if (word.split(" ").every(part => {
-        return (
-          (user.nom && user.nom.toLowerCase().includes(part)) ||
-          (user.prenom && user.prenom.toLowerCase().includes(part)) ||
-          (user.surnom && user.surnom.toLowerCase().includes(part))
-         )
-      })) result.push(user);
-    });
-    return result;
+  word = word.toLowerCase();
+  const result = [];
+  users.forEach(user => {
+    if (
+      (user.nom && user.nom.toLowerCase().includes(word)) ||
+      (user.prenom && user.prenom.toLowerCase().includes(word)) ||
+      (user.surnom && user.surnom.toLowerCase().includes(word))
+    ) result.push(user);
+    else if (word.split(" ").every(part => {
+      return (
+        (user.nom && user.nom.toLowerCase().includes(part)) ||
+        (user.prenom && user.prenom.toLowerCase().includes(part)) ||
+        (user.surnom && user.surnom.toLowerCase().includes(part))
+      )
+    })) result.push(user);
+  });
+  return result;
 }
 
 const app = express();
@@ -44,8 +44,8 @@ app.use(session({
   saveUninitialized: false,
   store
 }));
-app.use("/images", express.static('images'));
-app.use("/static", express.static("static"));
+// app.use("/images", express.static('images'));
+// app.use("/static", express.static("static"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(fileUpload());
 
@@ -53,7 +53,7 @@ app.use(fileUpload());
 
 app.get("/", (req, res) => res.render("index", { loggedIn: Boolean(req.session.loggedIn) }));
 app.post("/connexion", (req, res) => {
-  if (!req.body.password || req.body.password!==config.password) res.send("bad password");
+  if (!req.body.password || req.body.password !== config.password) res.send("bad password");
   else {
     req.session.loggedIn = true;
     res.redirect("/");
@@ -101,7 +101,7 @@ app.post("/clients/:id/modifier", (req, res) => {
   if (req.body.membre) req.body.membre = true;
   else req.body.membre = undefined;
   Client.findOneAndUpdate({ _id: req.params.id }, { ...req.body }).exec();
-  res.redirect("/clients/"+req.params.id);
+  res.redirect("/clients/" + req.params.id);
 });
 app.post("/clients/:id/supprimer", (req, res) => {
   Client.findOneAndDelete({ _id: req.params.id }).exec()
@@ -109,15 +109,15 @@ app.post("/clients/:id/supprimer", (req, res) => {
 })
 app.post("/clients/:id/operations", (req, res) => {
   Client
-    .findOneAndUpdate({ _id: req.params.id }, { $push: { operations: { montant: req.body.montant } }, $inc: { solde: req.body.montant } }, (err, client) => console.log(err));
-  res.redirect("/clients/"+req.params.id);
+    .findOneAndUpdate({ _id: req.params.id }, { $push: { operations: { montant: req.body.montant } }, $inc: { solde: req.body.montant } }, (err, client) => console.log(err));
+  res.redirect("/clients/" + req.params.id);
 });
 app.get("/clients/:idClient/achat/:idProduit", (req, res) => {
   Produit
     .findById(req.params.idProduit).exec()
     .then(produit => {
-      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec();
-      res.redirect("/clients/"+req.params.idClient);
+      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec();
+      res.redirect("/clients/" + req.params.idClient);
     })
     .catch(err => res.send(err));
 });
@@ -134,7 +134,7 @@ app.get("/produits/nouveau", (req, res) => res.render("nouveau-produit", { logge
 app.post("/produits", (req, res) => {
   const image = req.files.image;
   if (image) {
-    image.mv("images/"+image.name);
+    image.mv("images/" + image.name);
   }
   Produit
     .create({ ...req.body, image: image && image.name })
@@ -154,11 +154,11 @@ app.get("/produits/:id/modifier", (req, res) => {
 app.post("/produits/:id/modifier", (req, res) => {
   const image = req.files.image;
   if (image) {
-    image.mv("images/"+image.name);
+    image.mv("images/" + image.name);
     Produit.findOneAndUpdate({ _id: req.params.id }, { image: image.name }).exec();
   }
   Produit.findOneAndUpdate({ _id: req.params.id }, { ...req.body }).exec();
-  res.redirect("/produits/"+req.params.id);
+  res.redirect("/produits/" + req.params.id);
 });
 app.post("/produits/:id/supprimer", (req, res) => {
   Produit.findOneAndDelete({ _id: req.params.id }).exec()
