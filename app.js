@@ -15,12 +15,18 @@ function search(word, users) {
     word = word.toLowerCase();
     const result = [];
     users.forEach(user => {
-        if (
-            user.nom.toLowerCase().includes(word) ||
-            user.prenom.toLowerCase().includes(word) ||
-            user.surnom.toLowerCase().includes(word)
-        ) result.push(user);
-        else if (word.split(" ").every(part => user.nom.toLowerCase().includes(part) || user.prenom.toLowerCase().includes(part) || user.surnom.toLowerCase().includes(part))) result.push(user);
+      if (
+        (user.nom && user.nom.toLowerCase().includes(word)) ||
+        (user.prenom && user.prenom.toLowerCase().includes(word)) ||
+        (user.surnom && user.surnom.toLowerCase().includes(word))
+      ) result.push(user);
+      else if (word.split(" ").every(part => {
+        return (
+          (user.nom && user.nom.toLowerCase().includes(part)) ||
+          (user.prenom && user.prenom.toLowerCase().includes(part)) ||
+          (user.surnom && user.surnom.toLowerCase().includes(part))
+         )
+      })) result.push(user);
     });
     return result;
 }
