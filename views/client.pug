@@ -22,8 +22,14 @@ block content
         .ui.modal#commande
           .header #{client.prenom} #{client.nom}
           .content.scrollable
+            h3.ui.header Nourriture
             .ui.tiny.images
-              each produit in produits
+              each produit in nourriture
+                a.ui.tiny.image.perso-popup(href="/clients/"+client._id+"/achat/"+produit._id data-content=produit.nom+" ("+produit.prixUnitaire+" €)")
+                  img(src="/images/"+produit.image)
+            h3.ui.header Boissons
+            .ui.tiny.images
+              each produit in boissons
                 a.ui.tiny.image.perso-popup(href="/clients/"+client._id+"/achat/"+produit._id data-content=produit.nom+" ("+produit.prixUnitaire+" €)")
                   img(src="/images/"+produit.image)
 
