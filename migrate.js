@@ -26,7 +26,8 @@ mongoose.connect('mongodb://localhost/bonober', err => {
             Produit.create({
               nom: product.name,
               prixUnitaire: product.unitPrice,
-              categorie: product.category
+              categorie: product.category,
+              image: product.imageURL.split("/")[-1]
             });
             console.log(product.name, "migrated");
           });
