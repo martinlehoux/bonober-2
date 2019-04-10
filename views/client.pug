@@ -2,6 +2,15 @@ extends layout.pug
 
 block content
   .ui.container
+    form.ui.form(action="/clients" method="get")
+      .fields
+        .twelve.wide.field
+          input(type="text" name="search" placeholder="Recherche")
+        .two.wide.field
+          input.ui.button(type="submit" value="Chercher")
+        .two.wide.field
+          a.ui.button.yellow(href="/clients?membre=true") Toucan™
+
     h1.ui.header #{client.prenom} #{client.nom}
 
     .ui.grid
