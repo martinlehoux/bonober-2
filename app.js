@@ -73,6 +73,7 @@ app.get("/clients", (req, res) => {
     .exec()
     .then(clients => {
       if (req.query.search) clients = search(req.query.search, clients);
+      if (req.query.membre) clients = clients.filter(client => client.membre);
       res.render("clients", { clients, loggedIn: Boolean(req.session.loggedIn) })
     })
 });
