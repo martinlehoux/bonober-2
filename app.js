@@ -158,7 +158,7 @@ app.get("/produits/:id/modifier", (req, res) => {
     .then(produit => res.render("modifier-produit", { produit, loggedIn: Boolean(req.session.loggedIn) }));
 });
 app.post("/produits/:id/modifier", (req, res) => {
-  const image = req.files.image;
+  const image = req.files?.image;
   if (image) {
     image.mv("images/" + image.name);
     Produit.findOneAndUpdate({ _id: req.params.id }, { image: image.name }).exec();
