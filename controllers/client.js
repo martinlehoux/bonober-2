@@ -93,4 +93,17 @@ clientRouter.get("/:idClient/achat/:idProduit", (req, res) => {
     .catch(err => res.send(err));
 });
 
+clientRouter.post("/:idClient/commande", (req, res) => {
+  console.log(req.body);
+  Promise.all(
+    req.body.map(productId =>
+      Produit.findById(productId).exec()
+        .then(produit =>
+          Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec()
+        )
+    )).then(() => res.redirect("/clients/" + req.params.idClient))
+    .catch(err => res.send(err))
+
+})
+
 module.exports = clientRouter;

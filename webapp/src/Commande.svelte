@@ -27,12 +27,22 @@
   }
 
   function selectProduct(product) {
-    const item = { ...product, i: commande.length };
-    commande = [...commande, item];
+    commande = [...commande, { ...product }];
   }
 
   function removeProduct(index) {
     commande = commande.filter((item, i) => i !== index);
+  }
+
+  function postCommand() {
+    fetch("/clients/" + "5f59d2b14846b02432b32c3c" + "/commande", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commande.map((item) => item._id)),
+    }).then(() => window.location.reload());
   }
 </script>
 
@@ -49,7 +59,7 @@
               class="ui mini image" />
           </td>
           <td>{product.nom}</td>
-          <td>{product.prixUnitaire} €</td>
+          <td>{product.prixUnitaire.toFixed(2)} €</td>
         </tr>
       {/each}
     </tbody>
@@ -61,7 +71,7 @@
   <ul>
     {#each commande as product, i}
       <li>
-        {product.nom} ({product.prixUnitaire} €) <i
+        {product.nom} ({product.prixUnitaire.toFixed(2)} €) <i
           class="delete icon"
           on:click={() => removeProduct(i)} />
       </li>
@@ -73,5 +83,5 @@
       <div class="label">total</div>
     </div>
   </div>
-  <button class="ui button fluid">Valider</button>
+  <button class="ui button fluid" on:click={postCommand}>Valider</button>
 </main>

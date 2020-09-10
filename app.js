@@ -27,6 +27,7 @@ app.use(session({
 // app.use("/images", express.static('images'));
 // app.use("/static", express.static("static"));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(fileUpload());
 
 // Login checker
