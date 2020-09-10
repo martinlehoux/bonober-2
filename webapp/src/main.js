@@ -1,10 +1,5 @@
-import App from './App.svelte';
+import Commande from './Commande.svelte';
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
+const commande = new Commande({
+	target: document.getElementById("svelte-commande"),
 });
-
-export default app;
