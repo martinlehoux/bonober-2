@@ -28,6 +28,17 @@ block content
 
           button.ui.button(type="button" onclick="$('#recharge').modal('show')") Recharge
 
+        .ui.segment
+          h2.ui.header Nouvelle commande
+          form.ui.form(action="/clients/"+client._id+"/commande" method="post")
+            .field
+              select.ui.search.dropdown.fluid(name="product")
+                option Choisir
+                each product in produits
+                  option(value=product._id) #{product.nom} (#{product.prixUnitaire} €)
+            .field
+              button.ui.button(type="submit") Valider
+
         .ui.modal#commande
           .header #{client.prenom} #{client.nom}
           .content.scrollable
@@ -85,3 +96,4 @@ block content
   
   script $(".ui.modal").modal();
   script $('.perso-popup').popup();
+  script $('.ui.dropdown').dropdown();
