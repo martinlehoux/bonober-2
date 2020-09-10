@@ -4,14 +4,19 @@ const Produit = require("../models/produit");
 const produitRouter = express.Router();
 
 produitRouter.get("/", (req, res) => {
-  Promise
-    .all([
-      Produit.find({ categorie: "boisson" }).exec(),
-      Produit.find({ categorie: "nourriture" }).exec(),
-      Produit.find({ categorie: "autre" }).exec(),
-      Produit.find().exec(),
-    ])
-    .then(([boissons, nourritures, autres, produits]) => res.render("produits", { boissons, nourritures, autres, produits, loggedIn: Boolean(req.session.loggedIn) }));
+  if (req.query.format === "json") {
+    Produit.find().exec()
+      .then(produits => res.send(produits))
+  } else {
+    Promise
+      .all([
+        Produit.find({ categorie: "boisson" }).exec(),
+        Produit.find({ categorie: "nourriture" }).exec(),
+        Produit.find({ categorie: "autre" }).exec(),
+        Produit.find().exec(),
+      ])
+      .then(([boissons, nourritures, autres, produits]) => res.render("produits", { boissons, nourritures, autres, produits, loggedIn: Boolean(req.session.loggedIn) }));
+  }
 });
 
 produitRouter.get("/nouveau", (req, res) => res.render("nouveau-produit", { loggedIn: Boolean(req.session.loggedIn) }));
