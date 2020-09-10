@@ -28,16 +28,7 @@ block content
 
           button.ui.button(type="button" onclick="$('#recharge').modal('show')") Recharge
 
-        .ui.segment
-          h2.ui.header Nouvelle commande
-          form.ui.form(action="/clients/"+client._id+"/commande" method="post")
-            .field
-              select.ui.search.dropdown.fluid(name="product")
-                option Choisir
-                each product in produits
-                  option(value=product._id) #{product.nom} (#{product.prixUnitaire} €)
-            .field
-              button.ui.button(type="submit") Valider
+        .ui.segment#svelte-commande
 
         .ui.modal#commande
           .header #{client.prenom} #{client.nom}
@@ -94,6 +85,7 @@ block content
                 td #{commande.produit.nom}
                 td #{commande.produit.prixUnitaire.toFixed(2)} €
   
+  script(src="/static/bundle.js")
   script $(".ui.modal").modal();
   script $('.perso-popup').popup();
   script $('.ui.dropdown').dropdown();
