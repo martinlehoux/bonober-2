@@ -3,13 +3,15 @@
   let searchInput = "";
   let products = [];
   let commande = [];
+  let loading = true;
   $: filteredProducts = search(searchInput, products).slice(0, ProductsLimit);
   $: total = commande.reduce((total, item) => total + item.prixUnitaire, 0);
 
   // Get products
   fetch("/produits?format=json")
     .then((res) => res.json())
-    .then((data) => (products = data));
+    .then((data) => (products = data))
+    .then(() => (loading = false));
 
   function search(word, products) {
     word = word.toLowerCase();
@@ -48,6 +50,9 @@
 </script>
 
 <main>
+  <div class="ui inverted dimmer" class:active={loading}>
+    <div class="ui loader" />
+  </div>
   <h2 class="ui header">Nouvelle commande</h2>
   <table class="ui celled selectable table">
     <tbody>
