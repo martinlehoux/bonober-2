@@ -35,7 +35,8 @@
   }
 
   function postCommand() {
-    fetch("/clients/" + "5f59d2b14846b02432b32c3c" + "/commande", {
+    const clientId = window.location.pathname.split("/").pop();
+    fetch("/clients/" + clientId + "/commande", {
       method: "POST",
       headers: {
         Accept: "application/json",
