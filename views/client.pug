@@ -28,6 +28,34 @@ block content
 
           button.ui.button(type="button" onclick="$('#recharge').modal('show')") Recharge
 
+        h3.ui.header Dernières opérations
+        table.ui.table.compact
+          thead
+            tr
+              th Date
+              th Montant
+              th Motif
+          tbody
+            each operation in client.operations.slice(-5).reverse()
+              tr
+                td= operation.date.toLocaleDateString()
+                td #{operation.montant.toFixed(2)} €
+                td= operation.motif
+
+        h3.ui.header Dernières commandes
+        table.ui.table.compact
+          thead
+            tr
+              th Date
+              th Produit
+              th Prix
+          tbody
+            each commande in client.commandes.slice(-5).reverse()
+              tr
+                td= commande.date.toLocaleDateString()
+                td #{commande.produit.nom}
+                td #{commande.produit.prixUnitaire.toFixed(2)} €
+
         .ui.modal#commande
           .header #{client.prenom} #{client.nom}
           .content.scrollable
@@ -54,34 +82,9 @@ block content
             button.ui.button(type="submit" form="recharge-form") Valider
 
       .ten.wide.column
-        h3.ui.header Dernières opérations
-        table.ui.table.compact
-          thead
-            tr
-              th Date
-              th Montant
-              th Motif
-          tbody
-            each operation in client.operations.slice(-5).reverse()
-              tr
-                td= operation.date.toLocaleDateString()
-                td #{operation.montant.toFixed(2)} €
-                td= operation.motif
-
-        //- p= client.commandes
-        h3.ui.header Dernières commandes
-        table.ui.table.compact
-          thead
-            tr
-              th Date
-              th Produit
-              th Prix
-          tbody
-            each commande in client.commandes.slice(-5).reverse()
-              tr
-                td= commande.date.toLocaleDateString()
-                td #{commande.produit.nom}
-                td #{commande.produit.prixUnitaire.toFixed(2)} €
+        .ui.segment#svelte-commande
   
+  script(src="/static/bundle.js")
   script $(".ui.modal").modal();
   script $('.perso-popup').popup();
+  script $('.ui.dropdown').dropdown();
