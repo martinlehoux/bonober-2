@@ -82,6 +82,18 @@ block content
             button.ui.button(type="submit" form="recharge-form") Valider
 
       .ten.wide.column
+        .ui.statistics
+          .statistic
+            .value #{totalSpent.toFixed(2)} €
+            .label Total dépensé
+
+          .statistic
+            .label Meilleurs achats
+            ol.ui.list
+              each product in bestProducts
+                li #{product.name} x#{product.number}
+
+
         #svelte-commande
   
   script(src="/static/bundle.js")
