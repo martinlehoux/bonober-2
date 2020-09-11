@@ -69,7 +69,7 @@
                   <img
                     src={'/images/' + product.image}
                     alt=""
-                    class="ui mini image" />
+                    class="ui avatar image" />
                 </td>
                 <td>{product.nom}</td>
                 <td>{product.prixUnitaire.toFixed(2)} €</td>
