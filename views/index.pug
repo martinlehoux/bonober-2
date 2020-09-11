@@ -10,4 +10,15 @@ block content
               label Mot de passe
               input(type="password" name="password" placeholder="test")
         else
-          h3.ui.header Connecté
+          h2.ui.header Dashboard
+          //- .ui.statistic
+          //-   .value
+          //-   .label
+          h3.ui.header Meilleurs clients
+          table.ui.table.very.basic
+            tbody
+              each client, i in bestClients
+                tr
+                  th= i+1
+                  th #{client.prenom} '#{client.surnom}' #{client.nom}
+                  th #{client.totalSpent.toFixed(2)} €

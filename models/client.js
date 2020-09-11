@@ -10,7 +10,8 @@ const Client = new mongoose.Schema({
   membre: { type: Boolean, default: false },
   solde: { type: Number, default: 0 },
   operations: [Operation],
-  commandes: [Commande]
+  commandes: [Commande],
+  totalSpent: { type: Number, default: 0 },
 });
 
 Client.index({ "$**": 'text' });

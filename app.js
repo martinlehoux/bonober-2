@@ -7,6 +7,8 @@ const fileUpload = require("express-fileupload");
 const mongoDBStore = require('connect-mongodb-session')(session);
 const config = require("./config.json");
 
+const Client = require('./models/client');
+
 const authorizationRouter = require("./controllers/authorization");
 const clientRouter = require("./controllers/client");
 const produitRouter = require("./controllers/produit");
@@ -38,7 +40,14 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 
-app.get("/", (req, res) => res.render("index", { loggedIn: Boolean(req.session.loggedIn) }));
+app.get("/", (req, res) => {
+  // Best clients
+  Client.find()
+    .sort({ totalSpent: -1 })
+    .limit(20)
+    .exec()
+    .then(bestClients => res.render("index", { loggedIn: Boolean(req.session.loggedIn), bestClients }))
+});
 app.use("/", authorizationRouter);
 app.use("/clients", clientRouter);
 app.use("/produits", produitRouter);

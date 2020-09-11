@@ -66,11 +66,9 @@ clientRouter.get("/:id", (req, res) => {
         .sort((product1, product2) => product2.number - product1.number)
         .slice(0, 3)
       // Total spent
-      const totalSpent = client.commandes.reduce((total, commande) => commande.produit.prixUnitaire + total, 0);
       res.render("client", {
         client,
         bestProducts,
-        totalSpent,
         nourriture: produits.filter(produit => produit.categorie == "nourriture"),
         boissons: produits.filter(produit => produit.categorie == "boisson"),
         produits, loggedIn: Boolean(req.session.loggedIn)
@@ -106,7 +104,7 @@ clientRouter.get("/:idClient/achat/:idProduit", (req, res) => {
   Produit
     .findById(req.params.idProduit).exec()
     .then(produit => {
-      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec();
+      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire, totalSpent: produit.prixUnitaire } }).exec();
       res.redirect("/clients/" + req.params.idClient);
     })
     .catch(err => res.send(err));
@@ -118,7 +116,7 @@ clientRouter.post("/:idClient/commande", (req, res) => {
     req.body.map(productId =>
       Produit.findById(productId).exec()
         .then(produit =>
-          Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec()
+          Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire, totalSpent: produit.prixUnitaire } }).exec()
         )
     )).then(() => res.redirect("/clients/" + req.params.idClient))
     .catch(err => res.send(err))
