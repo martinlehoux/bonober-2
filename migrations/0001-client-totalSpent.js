@@ -11,15 +11,14 @@ mongoose.connect('mongodb://localhost/bonober', err => {
     Client.find({ totalSpent: undefined }).populate("commandes.produit").exec().then(clients => {
       console.log(`${clients.length} clients found with no totalSpent`)
       Promise.all(
-        clients.map(client => {
+        clients.map(client =>
           Client.findOneAndUpdate(
             { _id: client._id },
             { $set: { totalSpent: client.commandes.reduce((total, commande) => commande.produit.prixUnitaire + total, 0) } }
           ).exec()
             .then(() => console.log(`${client.nom} ${client.prenom} updated`))
-            .catch(err => console.log(err));
-        })
-
+            .catch(err => console.log(err))
+        )
       ).then(() => process.exit(0));
     })
   }
