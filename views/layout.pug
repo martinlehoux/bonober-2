@@ -14,10 +14,10 @@ html(lang="en")
     block navbar
       .ui.pointing.menu
         .item.header Bonober
+        a.item(href="/") Dashboard
         a.item(href="/clients") Clients
         a.item(href="/produits") Produits
         //- a.item(href="/courses") Courses
-        //- a.item(href="/statistiques") Statistiques
         .right.menu
           if !loggedIn
             a.item(href="/") Connexion

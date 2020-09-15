@@ -7,6 +7,9 @@ const fileUpload = require("express-fileupload");
 const mongoDBStore = require('connect-mongodb-session')(session);
 const config = require("./config.json");
 
+const Client = require('./models/client');
+
+const authorizationRouter = require("./controllers/authorization");
 const clientRouter = require("./controllers/client");
 const produitRouter = require("./controllers/produit");
 
@@ -24,33 +27,29 @@ app.use(session({
   saveUninitialized: false,
   store
 }));
-// app.use("/images", express.static('images'));
-// app.use("/static", express.static("static"));
+
+// DEV MODE
+if (!config.production) {
+  app.use("/images", express.static('images'));
+  app.use("/static", express.static("static"));
+}
+
+// MIDDLEWARES
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
 
-// Login checker
 
-app.get("/", (req, res) => res.render("index", { loggedIn: Boolean(req.session.loggedIn) }));
-app.post("/connexion", (req, res) => {
-  if (!req.body.password || req.body.password !== config.password) res.send("bad password");
-  else {
-    req.session.loggedIn = true;
-    res.redirect("/");
-  }
+app.get("/", (req, res) => {
+  // Best clients
+  Client.find()
+    .sort({ totalSpent: -1 })
+    .limit(20)
+    .exec()
+    .then(bestClients => res.render("index", { loggedIn: Boolean(req.session.loggedIn), bestClients }))
 });
-app.get("/deconnexion", (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
-});
-app.use((req, res, next) => {
-  if (req.session.loggedIn) next();
-  else res.redirect("/");
-});
-
+app.use("/", authorizationRouter);
 app.use("/clients", clientRouter);
-
 app.use("/produits", produitRouter);
 
 mongoose.connect('mongodb://localhost/bonober', err => {

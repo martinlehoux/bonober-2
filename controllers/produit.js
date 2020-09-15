@@ -45,7 +45,7 @@ produitRouter.get("/:id/modifier", (req, res) => {
 });
 
 produitRouter.post("/:id/modifier", (req, res) => {
-  const image = req.files?.image;
+  const image = req.files && req.files.image;
   if (image) {
     image.mv("images/" + image.name);
     Produit.findOneAndUpdate({ _id: req.params.id }, { image: image.name }).exec();

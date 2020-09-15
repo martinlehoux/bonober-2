@@ -22,6 +22,7 @@ block content
           tr
             td.selectable
               a(href="/clients/"+client._id).class  #{client.prenom} #{client.nom}
+            td.collapsing P#{client.promotion}
             td.right.align.collapsing
               .ui.label(class=client.solde<0 ? "red" : "green") #{client.solde.toFixed(2)} €
               if client.membre

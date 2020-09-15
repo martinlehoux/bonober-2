@@ -51,12 +51,29 @@ clientRouter.get("/:id", (req, res) => {
       Client.findById(req.params.id).populate("commandes.produit").exec(),
       Produit.find().exec(),
     ])
-    .then(([client, produits]) => res.render("client", {
-      client,
-      nourriture: produits.filter(produit => produit.categorie == "nourriture"),
-      boissons: produits.filter(produit => produit.categorie == "boisson"),
-      produits, loggedIn: Boolean(req.session.loggedIn)
-    }));
+    .then(([client, produits]) => {
+      // Best products
+      const bestProductsMap = client.commandes.reduce((summary, commande) => {
+        if (summary[commande.produit.nom]) {
+          summary[commande.produit.nom]++
+        } else {
+          summary[commande.produit.nom] = 1
+        }
+        return summary
+      }, {});
+      const bestProducts = Object.entries(bestProductsMap)
+        .map(([name, number]) => ({ name, number }))
+        .sort((product1, product2) => product2.number - product1.number)
+        .slice(0, 3)
+      // Total spent
+      res.render("client", {
+        client,
+        bestProducts,
+        nourriture: produits.filter(produit => produit.categorie == "nourriture"),
+        boissons: produits.filter(produit => produit.categorie == "boisson"),
+        produits, loggedIn: Boolean(req.session.loggedIn)
+      })
+    });
 });
 
 clientRouter.get("/:id/modifier", (req, res) => {
@@ -87,7 +104,7 @@ clientRouter.get("/:idClient/achat/:idProduit", (req, res) => {
   Produit
     .findById(req.params.idProduit).exec()
     .then(produit => {
-      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec();
+      Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire, totalSpent: produit.prixUnitaire } }).exec();
       res.redirect("/clients/" + req.params.idClient);
     })
     .catch(err => res.send(err));
@@ -99,7 +116,7 @@ clientRouter.post("/:idClient/commande", (req, res) => {
     req.body.map(productId =>
       Produit.findById(productId).exec()
         .then(produit =>
-          Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire } }).exec()
+          Client.findOneAndUpdate({ _id: req.params.idClient }, { $push: { commandes: { produit } }, $inc: { solde: -produit.prixUnitaire, totalSpent: produit.prixUnitaire } }).exec()
         )
     )).then(() => res.redirect("/clients/" + req.params.idClient))
     .catch(err => res.send(err))

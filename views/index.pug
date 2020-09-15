@@ -3,11 +3,23 @@ extends layout.pug
 block content
   .ui.container
     .ui.grid.one.column.centered
-      .column.four.wide
+      .column.eight.wide
         if !loggedIn
           form.ui.form(action="/connexion", method="post")
             .field
               label Mot de passe
-              input(type="password" name="password" placeholder="test")
+              input(type="password" name="password" placeholder="Mot de passe")
         else
-          h3.ui.header Connecté
+          h2.ui.header Dashboard
+          //- .ui.statistic
+          //-   .value
+          //-   .label
+          h3.ui.header Meilleurs clients
+          table.ui.table.very.basic
+            tbody
+              each client, i in bestClients
+                tr
+                  td= i+1
+                  td #{client.prenom} '#{client.surnom}' #{client.nom}
+                  td P#{client.promotion}
+                  td.right.aligned #{client.totalSpent.toFixed(2)} €

@@ -54,40 +54,58 @@
     <div class="ui loader" />
   </div>
   <h2 class="ui header">Nouvelle commande</h2>
-  <table class="ui celled selectable table">
-    <tbody>
-      {#each filteredProducts as product}
-        <tr on:click={() => selectProduct(product)}>
-          <td>
-            <img
-              src={'/images/' + product.image}
-              alt=""
-              class="ui mini image" />
-          </td>
-          <td>{product.nom}</td>
-          <td>{product.prixUnitaire.toFixed(2)} €</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-  <div class="ui input fluid icon">
-    <input type="text" bind:value={searchInput} />
-    <i class="search icon" />
-  </div>
-  <ul>
-    {#each commande as product, i}
-      <li>
-        {product.nom} ({product.prixUnitaire.toFixed(2)} €) <i
-          class="delete icon"
-          on:click={() => removeProduct(i)} />
-      </li>
-    {/each}
-  </ul>
-  <div class="ui one tiny horizontal statistics">
-    <div class="statistic">
-      <div class="value">{total.toFixed(2)} €</div>
-      <div class="label">total</div>
+  <div class="ui grid">
+    <div class="ui two column row">
+      <div class="column">
+        <div class="ui input fluid icon">
+          <input type="text" bind:value={searchInput} />
+          <i class="search icon" />
+        </div>
+        <table class="ui celled selectable table">
+          <tbody>
+            {#each filteredProducts as product}
+              <tr on:click={() => selectProduct(product)}>
+                <td>
+                  <img
+                    src={'/images/' + product.image}
+                    alt=""
+                    class="ui avatar image" />
+                </td>
+                <td>{product.nom}</td>
+                <td>{product.prixUnitaire.toFixed(2)} €</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <div class="ui tiny statistic">
+          <div class="value">{total.toFixed(2)} €</div>
+          <div class="label">total</div>
+        </div>
+        <button
+          class="ui button positive right floated"
+          on:click={postCommand}>Valider</button>
+        <div class="ui animated divided list">
+          {#each commande as product, i}
+            <div class="item">
+              <div class="right floated content">
+                <div
+                  class="ui icon button negative"
+                  on:click={() => removeProduct(i)}>
+                  <i class="delete icon" />
+                </div>
+              </div>
+              <div class="content">
+                <span class="header">{product.nom}</span>
+                <div class="description">
+                  {product.prixUnitaire.toFixed(2)} €
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
     </div>
   </div>
-  <button class="ui button fluid" on:click={postCommand}>Valider</button>
 </main>
