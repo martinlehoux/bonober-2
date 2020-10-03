@@ -11,7 +11,10 @@
   fetch("/produits?format=json")
     .then((res) => res.json())
     .then((data) => (products = data))
-    .then(() => (loading = false));
+    .then(() => {
+      loading = false;
+      document.getElementById("waiting").remove();
+    });
 
   function search(word, products) {
     word = word.toLowerCase();
@@ -53,7 +56,6 @@
   <div class="ui inverted dimmer" class:active={loading}>
     <div class="ui loader" />
   </div>
-  <h2 class="ui header">Nouvelle commande</h2>
   <div class="ui grid">
     <div class="ui two column row">
       <div class="column">
@@ -99,7 +101,8 @@
               <div class="content">
                 <span class="header">{product.nom}</span>
                 <div class="description">
-                  {product.prixUnitaire.toFixed(2)} €
+                  {product.prixUnitaire.toFixed(2)}
+                  €
                 </div>
               </div>
             </div>

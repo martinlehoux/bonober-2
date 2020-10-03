@@ -93,8 +93,13 @@ block content
               each product in bestProducts
                 li #{product.name} x#{product.number}
 
-
-        #svelte-commande
+        .ui.container
+          h2.ui.header Nouvelle commande
+          #svelte-commande.dimmable
+            #waiting
+              .ui.inverted.dimmer.active
+                .ui.loader
+              p En attente des produits...
   
   script(src="/static/bundle.js")
   script $(".ui.modal").modal();

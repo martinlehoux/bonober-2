@@ -52,6 +52,9 @@ app.use("/", authorizationRouter);
 app.use("/clients", clientRouter);
 app.use("/produits", produitRouter);
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
 mongoose.connect('mongodb://localhost/bonober', err => {
   if (err) {
     console.error('ERROR Unable to connect to Mongo database')
