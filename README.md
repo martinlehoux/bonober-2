@@ -7,7 +7,7 @@
 * `yarn start`
 * Utiliser de préférence PM2
 
-## Activer la webapp
+## Activer la webapp
 * Servir le dossier `static/` pour l'url `/static/`
 * Build la webapp :
     * `cd webapp`
