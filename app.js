@@ -20,6 +20,7 @@ const store = new mongoDBStore({
   collection: "sessions",
 });
 app.set('view engine', 'pug');
+app.set('views', config.viewsPath);
 app.use(morgan('tiny'));
 app.use(session({
   secret: config.secret,
